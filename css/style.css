@@ -542,6 +542,44 @@ select:focus {
   margin-top: 2px;
 }
 
+.player-card__memo-input {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 6px 8px;
+  font-size: 0.82rem;
+  color: var(--text);
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.player-card__memo-input:focus {
+  border-color: var(--gold);
+  outline: none;
+}
+
+.player-card__memo-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.player-card__memo-display {
+  word-break: break-all;
+}
+
+.autocomplete__memo {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.team-player__memo {
+  margin-top: 1px;
+}
+
 .player-card__actions {
   flex-shrink: 0;
   display: flex;

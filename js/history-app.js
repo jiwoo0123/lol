@@ -62,7 +62,9 @@
 
     var matched = [];
     for (var i = 0; i < users.length; i++) {
-      if (users[i].nickname.toLowerCase().indexOf(kw) >= 0) {
+      var nickname = users[i].nickname.toLowerCase();
+      var memo = (users[i].memo || '').toLowerCase();
+      if (nickname.indexOf(kw) >= 0 || memo.indexOf(kw) >= 0) {
         matched.push(users[i]);
       }
     }
@@ -140,6 +142,7 @@
           PlayerUi.renderAvatar(user, 'autocomplete__icon') +
           '<div class="autocomplete__text">' +
             '<div class="autocomplete__name">' + highlightMatch(user.nickname, keyword) + '</div>' +
+            (user.memo ? '<div class="autocomplete__memo">' + PlayerUi.escapeHtml(user.memo) + '</div>' : '') +
           '</div>' +
         '</li>';
     }

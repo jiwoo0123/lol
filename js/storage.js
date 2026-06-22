@@ -29,6 +29,7 @@ var UserStorage = (function () {
     return {
       id: doc.id,
       nickname: data.nickname || '',
+      memo: data.memo || '',
       sortOrder: data.sortOrder != null ? data.sortOrder : null,
       registeredAt: data.registeredAt || ''
     };
@@ -139,15 +140,18 @@ var UserStorage = (function () {
 
       var id = generateId();
       var now = new Date().toISOString();
+      var memo = (userData.memo || '').trim().slice(0, 200);
       var user = {
         id: id,
         nickname: nickname,
+        memo: memo,
         sortOrder: nextOrder,
         registeredAt: now
       };
 
       return usersRef().doc(id).set({
         nickname: nickname,
+        memo: memo,
         sortOrder: nextOrder,
         registeredAt: now
       }).then(function () {
@@ -190,6 +194,14 @@ var UserStorage = (function () {
 
     remove: function (id) {
       return usersRef().doc(id).delete().then(function () { return true; });
+    },
+
+    updateMemo: function (id, memo) {
+      memo = (memo || '').trim().slice(0, 200);
+      return usersRef().doc(id).update({ memo: memo }).catch(function (err) {
+        setLastError(err);
+        return Promise.reject(new Error(FirebaseApp.formatError(err)));
+      });
     },
 
     clear: function () {

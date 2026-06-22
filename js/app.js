@@ -1,6 +1,7 @@
 (function () {
   var els = {
     nickname: document.getElementById('nickname'),
+    memo: document.getElementById('memo'),
     registerBtn: document.getElementById('registerBtn'),
     registerStatus: document.getElementById('registerStatus'),
     reloadBtn: document.getElementById('reloadBtn'),
@@ -60,7 +61,9 @@
 
     if (keyword) {
       users = users.filter(function (u) {
-        return PlayerUi.formatDisplayName(u).toLowerCase().indexOf(keyword) >= 0;
+        var name = PlayerUi.formatDisplayName(u).toLowerCase();
+        var memo = (u.memo || '').toLowerCase();
+        return name.indexOf(keyword) >= 0 || memo.indexOf(keyword) >= 0;
       });
     }
 
@@ -87,6 +90,7 @@
           PlayerUi.renderAvatar(u, 'player-card__icon') +
           '<div class="player-card__info">' +
             '<div class="player-card__name">' + PlayerUi.renderNameHtml(u) + '</div>' +
+            '<input type="text" class="player-card__memo-input" data-id="' + u.id + '" placeholder="닉#태그 (예: 플레이어#KR1)" maxlength="200" autocomplete="off">' +
             '<div class="player-card__meta">등록 ' + formatDate(u.registeredAt) + '</div>' +
           '</div>' +
           '<div class="player-card__actions">' +
@@ -100,6 +104,21 @@
     var deleteBtns = els.playerList.querySelectorAll('.player-card__delete');
     for (var j = 0; j < deleteBtns.length; j++) {
       deleteBtns[j].addEventListener('click', onDeletePlayer);
+    }
+
+    var memoInputs = els.playerList.querySelectorAll('.player-card__memo-input');
+    for (var m = 0; m < memoInputs.length; m++) {
+      var memoId = memoInputs[m].getAttribute('data-id');
+      var memoUser = null;
+      for (var n = 0; n < users.length; n++) {
+        if (users[n].id === memoId) {
+          memoUser = users[n];
+          break;
+        }
+      }
+      memoInputs[m].value = memoUser && memoUser.memo ? memoUser.memo : '';
+      memoInputs[m].addEventListener('blur', onMemoBlur);
+      memoInputs[m].addEventListener('keydown', onMemoKeydown);
     }
 
     if (canReorder) {
@@ -197,6 +216,37 @@
       });
   }
 
+  function onMemoBlur(e) {
+    saveMemoInput(e.currentTarget);
+  }
+
+  function onMemoKeydown(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.currentTarget.blur();
+    }
+  }
+
+  function saveMemoInput(input) {
+    var id = input.getAttribute('data-id');
+    var memo = PlayerUi.normalizeMemo(input.value);
+    var users = UserStorage.getAll();
+    var target = null;
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].id === id) {
+        target = users[i];
+        break;
+      }
+    }
+    if (!target || (target.memo || '') === memo) return;
+
+    UserStorage.updateMemo(id, memo)
+      .catch(function (err) {
+        input.value = target.memo || '';
+        showStatus(err.message, 'error');
+      });
+  }
+
   function onDeletePlayer(e) {
     var id = e.currentTarget.getAttribute('data-id');
     var users = UserStorage.getAll();
@@ -234,9 +284,13 @@
 
     els.registerBtn.disabled = true;
 
-    UserStorage.add({ nickname: parsed })
+    UserStorage.add({
+      nickname: parsed,
+      memo: PlayerUi.normalizeMemo(els.memo.value)
+    })
       .then(function (player) {
         els.nickname.value = '';
+        els.memo.value = '';
         showStatus(PlayerUi.formatDisplayName(player) + ' 등록 완료!', 'success');
         renderPlayerList(els.searchInput.value);
         updateFileSyncStatus();
@@ -282,12 +336,23 @@
       onRegister();
     }
   });
+  els.memo.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      onRegister();
+    }
+  });
   els.clearBtn.addEventListener('click', onClear);
   els.searchInput.addEventListener('input', function () {
     renderPlayerList(els.searchInput.value);
   });
 
   document.addEventListener('lol-users-updated', function () {
+    var active = document.activeElement;
+    if (active && active.classList && active.classList.contains('player-card__memo-input')) {
+      updateFileSyncStatus();
+      return;
+    }
     renderPlayerList(els.searchInput.value);
     updateFileSyncStatus();
   });
