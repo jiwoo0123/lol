@@ -34,6 +34,13 @@
   }
 
   function updateFileSyncStatus() {
+    var err = (UserStorage.getLastError && UserStorage.getLastError()) ||
+      (MatchHistory.getLastError && MatchHistory.getLastError());
+    if (err) {
+      els.fileSyncStatus.textContent = 'Firestore 오류: ' + err;
+      els.fileSyncStatus.className = 'file-sync-status file-sync-status--warn';
+      return;
+    }
     if (UserStorage.canWrite() && MatchHistory.canWrite()) {
       els.fileSyncStatus.textContent = '저장소: Firebase (플레이어·전적 실시간 동기화)';
       els.fileSyncStatus.className = 'file-sync-status file-sync-status--connected';

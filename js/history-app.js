@@ -306,6 +306,13 @@
   }
 
   function updateMatchFileSyncStatus() {
+    var err = (MatchHistory.getLastError && MatchHistory.getLastError()) ||
+      (UserStorage.getLastError && UserStorage.getLastError());
+    if (err) {
+      els.matchFileSyncStatus.textContent = 'Firestore 오류: ' + err;
+      els.matchFileSyncStatus.className = 'file-sync-status file-sync-status--warn';
+      return;
+    }
     if (MatchHistory.canWrite()) {
       els.matchFileSyncStatus.textContent = '저장소: Firebase (실시간 동기화 · 기록/삭제 즉시 반영)';
       els.matchFileSyncStatus.className = 'file-sync-status file-sync-status--connected';

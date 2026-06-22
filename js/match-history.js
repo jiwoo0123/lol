@@ -6,6 +6,16 @@ var MatchHistory = (function () {
   var matchesCache = [];
   var unsubscribe = null;
   var loadSource = '';
+  var lastError = '';
+
+  function setLastError(err) {
+    if (!err) {
+      lastError = '';
+      return;
+    }
+    lastError = FirebaseApp.formatError(err);
+    document.dispatchEvent(new CustomEvent('lol-firestore-error', { detail: lastError }));
+  }
 
   function getTeamPlayerIds(team) {
     if (!team) return [];
@@ -82,6 +92,7 @@ var MatchHistory = (function () {
 
           unsubscribe = matchesRef().onSnapshot(
             function (snapshot) {
+              setLastError(null);
               applySnapshot(snapshot);
               loadSource = 'firebase';
               if (!settled) {
@@ -91,6 +102,7 @@ var MatchHistory = (function () {
             },
             function (err) {
               loadSource = 'error';
+              setLastError(err);
               if (!settled) {
                 settled = true;
                 reject(err);
@@ -133,6 +145,9 @@ var MatchHistory = (function () {
         teams: record.teams
       }).then(function () {
         return entry;
+      }).catch(function (err) {
+        setLastError(err);
+        return Promise.reject(new Error(FirebaseApp.formatError(err)));
       });
     },
 
@@ -188,7 +203,11 @@ var MatchHistory = (function () {
     },
 
     canWrite: function () {
-      return FirebaseApp.isReady();
+      return FirebaseApp.isReady() && !lastError;
+    },
+
+    getLastError: function () {
+      return lastError;
     },
 
     userSideInMatch: userSideInMatch,

@@ -51,11 +51,28 @@ var FirebaseApp = (function () {
     return initError;
   }
 
+  function formatError(err) {
+    var code = err && err.code ? err.code : '';
+    var msg = err && err.message ? err.message : String(err || '알 수 없는 오류');
+
+    if (code === 'permission-denied') {
+      return 'Firestore 권한 거부: 규칙 탭에서 read/write 허용 후 게시하세요.';
+    }
+    if (code === 'not-found' || msg.indexOf('does not exist') >= 0) {
+      return 'Firestore DB 없음: Firebase 콘솔 → Firestore Database → 데이터베이스 만들기';
+    }
+    if (code === 'unavailable') {
+      return 'Firestore 연결 실패: 네트워크 또는 API 키 제한을 확인하세요.';
+    }
+    return msg;
+  }
+
   return {
     init: init,
     getDb: getDb,
     isReady: isReady,
     isConfigured: isConfigured,
-    getInitError: getInitError
+    getInitError: getInitError,
+    formatError: formatError
   };
 })();

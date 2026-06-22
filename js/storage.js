@@ -6,6 +6,16 @@ var UserStorage = (function () {
   var usersCache = [];
   var unsubscribe = null;
   var loadSource = '';
+  var lastError = '';
+
+  function setLastError(err) {
+    if (!err) {
+      lastError = '';
+      return;
+    }
+    lastError = FirebaseApp.formatError(err);
+    document.dispatchEvent(new CustomEvent('lol-firestore-error', { detail: lastError }));
+  }
 
   function compareBySortOrder(a, b) {
     var ao = a.sortOrder != null ? a.sortOrder : 999999;
@@ -70,6 +80,7 @@ var UserStorage = (function () {
 
           unsubscribe = usersRef().onSnapshot(
             function (snapshot) {
+              setLastError(null);
               applySnapshot(snapshot);
               loadSource = 'firebase';
               if (!settled) {
@@ -79,6 +90,7 @@ var UserStorage = (function () {
             },
             function (err) {
               loadSource = 'error';
+              setLastError(err);
               if (!settled) {
                 settled = true;
                 reject(err);
@@ -140,6 +152,9 @@ var UserStorage = (function () {
         registeredAt: now
       }).then(function () {
         return user;
+      }).catch(function (err) {
+        setLastError(err);
+        return Promise.reject(new Error(FirebaseApp.formatError(err)));
       });
     },
 
@@ -197,7 +212,11 @@ var UserStorage = (function () {
     },
 
     canWrite: function () {
-      return FirebaseApp.isReady();
+      return FirebaseApp.isReady() && !lastError;
+    },
+
+    getLastError: function () {
+      return lastError;
     }
   };
 })();

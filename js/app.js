@@ -22,6 +22,12 @@
   }
 
   function updateFileSyncStatus() {
+    var userErr = UserStorage.getLastError && UserStorage.getLastError();
+    if (userErr) {
+      els.fileSyncStatus.textContent = 'Firestore 오류: ' + userErr;
+      els.fileSyncStatus.className = 'file-sync-status file-sync-status--warn';
+      return;
+    }
     if (UserStorage.canWrite()) {
       els.fileSyncStatus.textContent = '저장소: Firebase (실시간 동기화 · 등록/삭제 즉시 반영)';
       els.fileSyncStatus.className = 'file-sync-status file-sync-status--connected';
@@ -285,8 +291,13 @@
   UserStorage.init().then(function () {
     renderPlayerList();
     updateFileSyncStatus();
-  }).catch(function () {
+  }).catch(function (err) {
     renderPlayerList();
+    updateFileSyncStatus();
+    showStatus(FirebaseApp.formatError(err), 'error');
+  });
+
+  document.addEventListener('lol-firestore-error', function () {
     updateFileSyncStatus();
   });
 })();
