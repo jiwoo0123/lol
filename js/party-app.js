@@ -225,7 +225,7 @@
 
     return (
       '<div class="player-card player-card--participant" data-id="' + user.id + '">' +
-        '<div class="player-card__main player-card--clickable" data-id="' + user.id + '" title="개인 전적 보기">' +
+        '<div class="player-card__main" data-id="' + user.id + '">' +
           PlayerUi.renderAvatar(user, 'player-card__icon') +
           '<div class="player-card__info">' +
             '<div class="player-card__name">' + PlayerUi.renderNameHtml(user) + '</div>' +
@@ -282,17 +282,6 @@
     for (var j = 0; j < captainBtns.length; j++) {
       captainBtns[j].addEventListener('click', onToggleCaptain);
     }
-
-    var historyLinks = els.participantList.querySelectorAll('.player-card__main');
-    for (var k = 0; k < historyLinks.length; k++) {
-      historyLinks[k].addEventListener('click', onOpenHistory);
-    }
-  }
-
-  function onOpenHistory(e) {
-    var id = e.currentTarget.getAttribute('data-id');
-    if (!getUserById(id)) return;
-    window.location.href = 'history.html?userId=' + encodeURIComponent(id);
   }
 
   function bindPoolEvents() {
