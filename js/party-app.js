@@ -199,7 +199,7 @@
         PlayerUi.renderAvatar(user, 'team-player__icon') +
         '<div class="team-player__info">' +
           '<div class="team-player__name">' + PlayerUi.escapeHtml(user.nickname) + badge + '</div>' +
-          PlayerUi.renderMemoMeta(user, 'team-player__memo') +
+          PlayerUi.renderAccountsMeta(user, 'team-player__accounts') +
         '</div>' +
         (options.action || '') +
       '</div>'
@@ -229,7 +229,7 @@
           PlayerUi.renderAvatar(user, 'player-card__icon') +
           '<div class="player-card__info">' +
             '<div class="player-card__name">' + PlayerUi.renderNameHtml(user) + '</div>' +
-            PlayerUi.renderMemoMeta(user) +
+            PlayerUi.renderAccountsMeta(user) +
             '<div class="player-card__meta">참가 중' + teamHint + '</div>' +
           '</div>' +
         '</div>' +
@@ -251,7 +251,7 @@
         PlayerUi.renderAvatar(user, 'player-card__icon') +
         '<div class="player-card__info">' +
           '<div class="player-card__name">' + PlayerUi.renderNameHtml(user) + '</div>' +
-          PlayerUi.renderMemoMeta(user) +
+          PlayerUi.renderAccountsMeta(user) +
         '</div>' +
         '<div class="player-card__actions">' + action + '</div>' +
       '</div>'
@@ -427,9 +427,7 @@
 
     if (keyword) {
       users = users.filter(function (u) {
-        var full = PlayerUi.formatDisplayName(u).toLowerCase();
-        var memo = (u.memo || '').toLowerCase();
-        return full.indexOf(keyword) >= 0 || memo.indexOf(keyword) >= 0;
+        return PlayerUi.matchesKeyword(u, keyword);
       });
     }
 

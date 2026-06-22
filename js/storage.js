@@ -24,12 +24,27 @@ var UserStorage = (function () {
     return (a.registeredAt || '').localeCompare(b.registeredAt || '');
   }
 
+  function parseAccounts(data) {
+    if (Array.isArray(data.accounts)) {
+      var list = [];
+      for (var i = 0; i < data.accounts.length; i++) {
+        var item = (data.accounts[i] || '').trim();
+        if (item) list.push(item.slice(0, 64));
+      }
+      return list.slice(0, 10);
+    }
+    if (data.memo && String(data.memo).trim()) {
+      return [String(data.memo).trim().slice(0, 200)];
+    }
+    return [];
+  }
+
   function docToUser(doc) {
     var data = doc.data() || {};
     return {
       id: doc.id,
       nickname: data.nickname || '',
-      memo: data.memo || '',
+      accounts: parseAccounts(data),
       sortOrder: data.sortOrder != null ? data.sortOrder : null,
       registeredAt: data.registeredAt || ''
     };
@@ -140,18 +155,18 @@ var UserStorage = (function () {
 
       var id = generateId();
       var now = new Date().toISOString();
-      var memo = (userData.memo || '').trim().slice(0, 200);
+      var accounts = Array.isArray(userData.accounts) ? userData.accounts : [];
       var user = {
         id: id,
         nickname: nickname,
-        memo: memo,
+        accounts: accounts,
         sortOrder: nextOrder,
         registeredAt: now
       };
 
       return usersRef().doc(id).set({
         nickname: nickname,
-        memo: memo,
+        accounts: accounts,
         sortOrder: nextOrder,
         registeredAt: now
       }).then(function () {
@@ -196,9 +211,22 @@ var UserStorage = (function () {
       return usersRef().doc(id).delete().then(function () { return true; });
     },
 
-    updateMemo: function (id, memo) {
-      memo = (memo || '').trim().slice(0, 200);
-      return usersRef().doc(id).update({ memo: memo }).catch(function (err) {
+    updateAccounts: function (id, accounts) {
+      var list = [];
+      if (Array.isArray(accounts)) {
+        for (var i = 0; i < accounts.length; i++) {
+          var item = (accounts[i] || '').trim();
+          if (item) list.push(item.slice(0, 64));
+        }
+      }
+      list = list.slice(0, 10);
+
+      var payload = {
+        accounts: list,
+        memo: firebase.firestore.FieldValue.delete()
+      };
+
+      return usersRef().doc(id).update(payload).catch(function (err) {
         setLastError(err);
         return Promise.reject(new Error(FirebaseApp.formatError(err)));
       });

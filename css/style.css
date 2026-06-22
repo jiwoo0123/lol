@@ -542,10 +542,49 @@ select:focus {
   margin-top: 2px;
 }
 
-.player-card__memo-input {
-  display: block;
-  width: 100%;
-  margin-top: 6px;
+.player-card__accounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.account-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  word-break: break-all;
+}
+
+.player-accounts {
+  margin-top: 8px;
+}
+
+.player-accounts__label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.player-accounts__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.player-accounts__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.player-accounts__input {
+  flex: 1;
+  min-width: 0;
   padding: 6px 8px;
   font-size: 0.82rem;
   color: var(--text);
@@ -556,28 +595,49 @@ select:focus {
   transition: border-color 0.2s;
 }
 
-.player-card__memo-input:focus {
+.player-accounts__input:focus {
   border-color: var(--gold);
   outline: none;
 }
 
-.player-card__memo-input::placeholder {
+.player-accounts__input::placeholder {
   color: var(--text-muted);
   opacity: 0.75;
 }
 
-.player-card__memo-display {
-  word-break: break-all;
+.player-accounts__remove {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: color 0.2s, background 0.2s;
 }
 
-.autocomplete__memo {
+.player-accounts__remove:hover {
+  color: var(--danger);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.player-accounts__add {
+  margin-top: 6px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.autocomplete__accounts {
   font-size: 0.78rem;
   color: var(--text-muted);
   margin-top: 2px;
 }
 
-.team-player__memo {
-  margin-top: 1px;
+.team-player__accounts {
+  margin-top: 2px;
 }
 
 .player-card__actions {

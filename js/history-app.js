@@ -62,9 +62,7 @@
 
     var matched = [];
     for (var i = 0; i < users.length; i++) {
-      var nickname = users[i].nickname.toLowerCase();
-      var memo = (users[i].memo || '').toLowerCase();
-      if (nickname.indexOf(kw) >= 0 || memo.indexOf(kw) >= 0) {
+      if (PlayerUi.matchesKeyword(users[i], kw)) {
         matched.push(users[i]);
       }
     }
@@ -137,12 +135,16 @@
     for (var i = 0; i < suggestItems.length; i++) {
       var user = suggestItems[i];
       var activeClass = i === suggestActiveIndex ? ' autocomplete__item--active' : '';
+      var accounts = PlayerUi.getAccounts(user);
+      var accountsHtml = accounts.length
+        ? '<div class="autocomplete__accounts">' + PlayerUi.escapeHtml(accounts.join(' · ')) + '</div>'
+        : '';
       html +=
         '<li class="autocomplete__item' + activeClass + '" role="option" data-id="' + user.id + '" data-index="' + i + '">' +
           PlayerUi.renderAvatar(user, 'autocomplete__icon') +
           '<div class="autocomplete__text">' +
             '<div class="autocomplete__name">' + highlightMatch(user.nickname, keyword) + '</div>' +
-            (user.memo ? '<div class="autocomplete__memo">' + PlayerUi.escapeHtml(user.memo) + '</div>' : '') +
+            accountsHtml +
           '</div>' +
         '</li>';
     }

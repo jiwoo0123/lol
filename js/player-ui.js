@@ -1,8 +1,9 @@
 /**
- * 플레이어 표시 (닉네임 · 계정 메모)
+ * 플레이어 표시 (별명 · 계정 목록)
  */
 var PlayerUi = (function () {
-  var MEMO_MAX = 200;
+  var ACCOUNT_MAX = 64;
+  var ACCOUNTS_MAX = 10;
 
   function escapeHtml(str) {
     var div = document.createElement('div');
@@ -18,8 +19,58 @@ var PlayerUi = (function () {
     return trimmed;
   }
 
-  function normalizeMemo(input) {
-    return (input || '').trim().slice(0, MEMO_MAX);
+  function normalizeAccount(input) {
+    return (input || '').trim().slice(0, ACCOUNT_MAX);
+  }
+
+  function normalizeAccounts(list) {
+    var raw = [];
+    if (Array.isArray(list)) {
+      raw = list;
+    } else if (typeof list === 'string' && list.trim()) {
+      raw = list.split(/[\n,]+/);
+    }
+
+    var seen = {};
+    var result = [];
+    for (var i = 0; i < raw.length; i++) {
+      var acc = normalizeAccount(raw[i]);
+      if (!acc) continue;
+      var key = acc.toLowerCase();
+      if (seen[key]) continue;
+      seen[key] = true;
+      result.push(acc);
+      if (result.length >= ACCOUNTS_MAX) break;
+    }
+    return result;
+  }
+
+  function getAccounts(user) {
+    if (!user) return [];
+    if (Array.isArray(user.accounts)) return user.accounts.slice();
+    if (user.memo && user.memo.trim()) return normalizeAccounts([user.memo]);
+    return [];
+  }
+
+  function accountsEqual(a, b) {
+    var left = normalizeAccounts(a);
+    var right = normalizeAccounts(b);
+    if (left.length !== right.length) return false;
+    for (var i = 0; i < left.length; i++) {
+      if (left[i] !== right[i]) return false;
+    }
+    return true;
+  }
+
+  function matchesKeyword(user, keyword) {
+    var kw = (keyword || '').toLowerCase().trim();
+    if (!kw) return true;
+    if (formatDisplayName(user).toLowerCase().indexOf(kw) >= 0) return true;
+    var accounts = getAccounts(user);
+    for (var i = 0; i < accounts.length; i++) {
+      if (accounts[i].toLowerCase().indexOf(kw) >= 0) return true;
+    }
+    return false;
   }
 
   function formatDisplayName(user) {
@@ -40,10 +91,16 @@ var PlayerUi = (function () {
     return '<span class="' + cls + '" aria-hidden="true">' + escapeHtml(avatarLetter(user)) + '</span>';
   }
 
-  function renderMemoMeta(user, extraClass) {
-    if (!user || !user.memo) return '';
-    var cls = 'player-card__meta player-card__memo-display' + (extraClass ? ' ' + extraClass : '');
-    return '<div class="' + cls + '">' + escapeHtml(user.memo) + '</div>';
+  function renderAccountsMeta(user, extraClass) {
+    var accounts = getAccounts(user);
+    if (accounts.length === 0) return '';
+    var cls = 'player-card__accounts' + (extraClass ? ' ' + extraClass : '');
+    var html = '<div class="' + cls + '">';
+    for (var i = 0; i < accounts.length; i++) {
+      html += '<span class="account-tag">' + escapeHtml(accounts[i]) + '</span>';
+    }
+    html += '</div>';
+    return html;
   }
 
   function compareBySortOrder(a, b) {
@@ -55,12 +112,17 @@ var PlayerUi = (function () {
 
   return {
     normalizeNickname: normalizeNickname,
-    normalizeMemo: normalizeMemo,
+    normalizeAccount: normalizeAccount,
+    normalizeAccounts: normalizeAccounts,
+    getAccounts: getAccounts,
+    accountsEqual: accountsEqual,
+    matchesKeyword: matchesKeyword,
     formatDisplayName: formatDisplayName,
     renderNameHtml: renderNameHtml,
-    renderMemoMeta: renderMemoMeta,
+    renderAccountsMeta: renderAccountsMeta,
     renderAvatar: renderAvatar,
     escapeHtml: escapeHtml,
-    compareBySortOrder: compareBySortOrder
+    compareBySortOrder: compareBySortOrder,
+    ACCOUNTS_MAX: ACCOUNTS_MAX
   };
 })();
