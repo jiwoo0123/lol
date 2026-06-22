@@ -531,6 +531,30 @@ select:focus {
   -webkit-font-smoothing: antialiased;
 }
 
+.player-card__nickname-input {
+  display: block;
+  width: 100%;
+  padding: 4px 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--gold-light);
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.player-card__nickname-input:focus {
+  border-color: var(--gold);
+  outline: none;
+}
+
+.player-card__nickname-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
 .player-card__name span {
   color: var(--text-muted);
   font-weight: 400;

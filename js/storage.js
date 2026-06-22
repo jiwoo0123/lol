@@ -135,9 +135,9 @@ var UserStorage = (function () {
     },
 
     add: function (userData) {
-      var nickname = (userData.nickname || '').trim();
+      var nickname = (userData.nickname || '').trim().slice(0, 32);
       if (!nickname) {
-        return Promise.reject(new Error('닉네임을 입력하세요.'));
+        return Promise.reject(new Error('별명을 입력하세요.'));
       }
 
       var existing = this.findByNickname(nickname);
@@ -227,6 +227,23 @@ var UserStorage = (function () {
       };
 
       return usersRef().doc(id).update(payload).catch(function (err) {
+        setLastError(err);
+        return Promise.reject(new Error(FirebaseApp.formatError(err)));
+      });
+    },
+
+    updateNickname: function (id, nickname) {
+      nickname = (nickname || '').trim();
+      if (!nickname) {
+        return Promise.reject(new Error('별명을 입력하세요.'));
+      }
+
+      var existing = this.findByNickname(nickname);
+      if (existing && existing.id !== id) {
+        return Promise.reject(new Error('이미 등록된 별명입니다: ' + nickname));
+      }
+
+      return usersRef().doc(id).update({ nickname: nickname }).catch(function (err) {
         setLastError(err);
         return Promise.reject(new Error(FirebaseApp.formatError(err)));
       });

@@ -12,9 +12,9 @@ var PlayerUi = (function () {
   }
 
   function normalizeNickname(input) {
-    var trimmed = (input || '').trim();
+    var trimmed = (input || '').trim().slice(0, 32);
     if (!trimmed) {
-      throw new Error('닉네임을 입력하세요.');
+      throw new Error('별명을 입력하세요.');
     }
     return trimmed;
   }
