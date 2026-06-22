@@ -16,7 +16,7 @@
         <span class="header__logo">⚔</span>
         <div>
           <h1>LoL 내전 관리</h1>
-          <p class="header__sub">유저 등록 · Firebase</p>
+          <p class="header__sub">플레이어 등록</p>
         </div>
       </div>
       <div class="header__stats">
@@ -31,7 +31,7 @@
     <main class="main">
       <section class="card">
         <h2>플레이어 등록</h2>
-        <p class="hint">닉네임만 입력해 등록하세요. Firebase에 실시간 저장됩니다.</p>
+        <p class="hint">닉네임만 입력해 등록하세요.</p>
         <div class="form-row">
           <label for="nickname">닉네임</label>
           <input type="text" id="nickname" placeholder="닉네임" autocomplete="off">
@@ -42,8 +42,8 @@
 
       <section class="card card--compact">
         <h2>데이터 관리</h2>
-        <p class="hint">플레이어 데이터는 <strong>Firebase Firestore</strong>에 저장되며, 접속 중인 모든 기기에 실시간 반영됩니다.</p>
-        <p id="fileSyncStatus" class="file-sync-status">저장소: 불러오는 중...</p>
+        <p class="hint">목록을 다시 불러오거나 전체 삭제할 수 있습니다.</p>
+        <p id="fileSyncStatus" class="file-sync-status" hidden>불러오는 중...</p>
         <div class="btn-group">
           <button type="button" id="reloadBtn" class="btn btn--secondary">새로고침</button>
           <button type="button" id="clearBtn" class="btn btn--danger">전체 삭제</button>

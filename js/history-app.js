@@ -309,18 +309,22 @@
     var err = (MatchHistory.getLastError && MatchHistory.getLastError()) ||
       (UserStorage.getLastError && UserStorage.getLastError());
     if (err) {
-      els.matchFileSyncStatus.textContent = 'Firestore 오류: ' + err;
+      els.matchFileSyncStatus.hidden = false;
+      els.matchFileSyncStatus.textContent = err;
       els.matchFileSyncStatus.className = 'file-sync-status file-sync-status--warn';
       return;
     }
     if (MatchHistory.canWrite()) {
-      els.matchFileSyncStatus.textContent = '저장소: Firebase (실시간 동기화 · 기록/삭제 즉시 반영)';
-      els.matchFileSyncStatus.className = 'file-sync-status file-sync-status--connected';
-    } else if (FirebaseApp.isConfigured()) {
-      els.matchFileSyncStatus.textContent = '저장소: Firebase 연결 중...';
+      els.matchFileSyncStatus.hidden = true;
+      return;
+    }
+    if (FirebaseApp.isConfigured()) {
+      els.matchFileSyncStatus.hidden = false;
+      els.matchFileSyncStatus.textContent = '불러오는 중...';
       els.matchFileSyncStatus.className = 'file-sync-status';
     } else {
-      els.matchFileSyncStatus.textContent = 'Firebase 설정 필요: js/firebase-config.js';
+      els.matchFileSyncStatus.hidden = false;
+      els.matchFileSyncStatus.textContent = '연결할 수 없습니다.';
       els.matchFileSyncStatus.className = 'file-sync-status file-sync-status--warn';
     }
   }

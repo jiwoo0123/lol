@@ -17,11 +17,11 @@ var FirebaseApp = (function () {
   function init() {
     if (ready) return Promise.resolve();
     if (!isConfigured()) {
-      initError = 'Firebase 설정이 필요합니다. js/firebase-config.js 를 확인하세요.';
+      initError = '서비스를 시작할 수 없습니다.';
       return Promise.reject(new Error(initError));
     }
     if (typeof firebase === 'undefined') {
-      initError = 'Firebase SDK를 불러오지 못했습니다.';
+      initError = '연결 모듈을 불러오지 못했습니다.';
       return Promise.reject(new Error(initError));
     }
 
@@ -34,7 +34,7 @@ var FirebaseApp = (function () {
       initError = '';
       return Promise.resolve();
     } catch (e) {
-      initError = e.message || 'Firebase 초기화 실패';
+      initError = e.message || '서비스 연결에 실패했습니다.';
       return Promise.reject(e);
     }
   }
@@ -56,13 +56,13 @@ var FirebaseApp = (function () {
     var msg = err && err.message ? err.message : String(err || '알 수 없는 오류');
 
     if (code === 'permission-denied') {
-      return 'Firestore 권한 거부: 규칙 탭에서 read/write 허용 후 게시하세요.';
+      return '저장 권한이 없습니다. 잠시 후 다시 시도해 주세요.';
     }
     if (code === 'not-found' || msg.indexOf('does not exist') >= 0) {
-      return 'Firestore DB 없음: Firebase 콘솔 → Firestore Database → 데이터베이스 만들기';
+      return '서버에 연결할 수 없습니다.';
     }
     if (code === 'unavailable') {
-      return 'Firestore 연결 실패: 네트워크 또는 API 키 제한을 확인하세요.';
+      return '네트워크 연결을 확인해 주세요.';
     }
     return msg;
   }

@@ -28,8 +28,8 @@
     <main class="main">
       <section class="card card--compact">
         <h2>데이터 관리</h2>
-        <p class="hint">전적은 <strong>Firebase Firestore</strong>에 저장되며 실시간으로 동기화됩니다.</p>
-        <p id="matchFileSyncStatus" class="file-sync-status">저장소: 불러오는 중...</p>
+        <p class="hint">최신 전적을 다시 불러올 수 있습니다.</p>
+        <p id="matchFileSyncStatus" class="file-sync-status" hidden>불러오는 중...</p>
         <div class="btn-group">
           <button type="button" id="reloadMatchBtn" class="btn btn--secondary">새로고침</button>
         </div>
@@ -107,7 +107,7 @@
     </main>
 
     <footer class="footer">
-      <p>파티에서 승리팀을 기록하면 Firebase에 저장됩니다.</p>
+      <p>파티에서 승리팀을 기록하면 여기에 표시됩니다.</p>
     </footer>
   </div>
 

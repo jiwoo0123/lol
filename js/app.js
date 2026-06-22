@@ -24,18 +24,22 @@
   function updateFileSyncStatus() {
     var userErr = UserStorage.getLastError && UserStorage.getLastError();
     if (userErr) {
-      els.fileSyncStatus.textContent = 'Firestore 오류: ' + userErr;
+      els.fileSyncStatus.hidden = false;
+      els.fileSyncStatus.textContent = userErr;
       els.fileSyncStatus.className = 'file-sync-status file-sync-status--warn';
       return;
     }
     if (UserStorage.canWrite()) {
-      els.fileSyncStatus.textContent = '저장소: Firebase (실시간 동기화 · 등록/삭제 즉시 반영)';
-      els.fileSyncStatus.className = 'file-sync-status file-sync-status--connected';
-    } else if (FirebaseApp.isConfigured()) {
-      els.fileSyncStatus.textContent = '저장소: Firebase 연결 중...';
+      els.fileSyncStatus.hidden = true;
+      return;
+    }
+    if (FirebaseApp.isConfigured()) {
+      els.fileSyncStatus.hidden = false;
+      els.fileSyncStatus.textContent = '불러오는 중...';
       els.fileSyncStatus.className = 'file-sync-status';
     } else {
-      els.fileSyncStatus.textContent = 'Firebase 설정 필요: js/firebase-config.js';
+      els.fileSyncStatus.hidden = false;
+      els.fileSyncStatus.textContent = '연결할 수 없습니다.';
       els.fileSyncStatus.className = 'file-sync-status file-sync-status--warn';
     }
   }
@@ -65,7 +69,7 @@
     if (users.length === 0) {
       var emptyMsg = keyword ? '검색 결과가 없습니다.' : '등록된 플레이어가 없습니다.';
       if (!keyword && UserStorage.getAll().length === 0 && !UserStorage.canWrite()) {
-        emptyMsg += ' Firebase 설정을 확인하세요.';
+        emptyMsg += ' 잠시 후 다시 시도해 주세요.';
       }
       els.playerList.innerHTML = '<p class="empty">' + emptyMsg + '</p>';
       return;
@@ -250,7 +254,7 @@
       .then(function () {
         renderPlayerList(els.searchInput.value);
         updateFileSyncStatus();
-        showStatus('Firebase에서 데이터를 다시 불러왔습니다.', 'success');
+        showStatus('목록을 다시 불러왔습니다.', 'success');
       })
       .catch(function (err) {
         showStatus(err.message, 'error');

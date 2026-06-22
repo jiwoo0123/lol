@@ -37,18 +37,22 @@
     var err = (UserStorage.getLastError && UserStorage.getLastError()) ||
       (MatchHistory.getLastError && MatchHistory.getLastError());
     if (err) {
-      els.fileSyncStatus.textContent = 'Firestore 오류: ' + err;
+      els.fileSyncStatus.hidden = false;
+      els.fileSyncStatus.textContent = err;
       els.fileSyncStatus.className = 'file-sync-status file-sync-status--warn';
       return;
     }
     if (UserStorage.canWrite() && MatchHistory.canWrite()) {
-      els.fileSyncStatus.textContent = '저장소: Firebase (플레이어·전적 실시간 동기화)';
-      els.fileSyncStatus.className = 'file-sync-status file-sync-status--connected';
-    } else if (FirebaseApp.isConfigured()) {
-      els.fileSyncStatus.textContent = '저장소: Firebase 연결 중...';
+      els.fileSyncStatus.hidden = true;
+      return;
+    }
+    if (FirebaseApp.isConfigured()) {
+      els.fileSyncStatus.hidden = false;
+      els.fileSyncStatus.textContent = '불러오는 중...';
       els.fileSyncStatus.className = 'file-sync-status';
     } else {
-      els.fileSyncStatus.textContent = 'Firebase 설정 필요: js/firebase-config.js';
+      els.fileSyncStatus.hidden = false;
+      els.fileSyncStatus.textContent = '연결할 수 없습니다.';
       els.fileSyncStatus.className = 'file-sync-status file-sync-status--warn';
     }
   }
@@ -119,7 +123,7 @@
       els.recordBlueWin.disabled = true;
       els.recordRedWin.disabled = true;
     } else {
-      els.recordHint.textContent = '승리한 팀을 누르면 Firebase에 기록됩니다.';
+      els.recordHint.textContent = '승리한 팀을 누르면 전적에 기록됩니다.';
       els.recordBlueWin.disabled = false;
       els.recordRedWin.disabled = false;
     }
