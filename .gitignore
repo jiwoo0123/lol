@@ -1,0 +1,2 @@
+# Firebase 설정 (로컬에서만 쓰는 경우 선택)
+# firebase-config.js 는 GitHub Pages 배포에 필요하므로 커밋해도 됩니다 (API 키는 클라이언트용 공개값)

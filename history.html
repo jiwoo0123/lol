@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>전적 · LoL 내전 관리</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header__brand">
+        <span class="header__logo">⚔</span>
+        <div>
+          <h1 id="historyHeaderTitle">전적</h1>
+          <p id="historyHeaderSub" class="header__sub">내전 경기 기록</p>
+        </div>
+      </div>
+      <span id="historyRecordSummary" class="header__stats">—</span>
+    </header>
+
+    <nav id="site-nav" data-page="history"></nav>
+    <script src="js/nav.js"></script>
+
+    <main class="main">
+      <section class="card card--compact">
+        <h2>데이터 관리</h2>
+        <p class="hint">전적은 <strong>Firebase Firestore</strong>에 저장되며 실시간으로 동기화됩니다.</p>
+        <p id="matchFileSyncStatus" class="file-sync-status">저장소: 불러오는 중...</p>
+        <div class="btn-group">
+          <button type="button" id="reloadMatchBtn" class="btn btn--secondary">새로고침</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>전적 검색</h2>
+        <p class="hint">플레이어와 기간을 선택하면 해당 조건의 경기만 표시됩니다.</p>
+        <div class="form-row form-row--player">
+          <label for="playerSearchInput">플레이어</label>
+          <div class="autocomplete autocomplete--search" id="playerAutocomplete">
+            <input
+              type="search"
+              id="playerSearchInput"
+              class="search-input"
+              placeholder="닉네임 입력..."
+              autocomplete="off"
+              role="combobox"
+              aria-expanded="false"
+              aria-autocomplete="list"
+              aria-controls="playerSuggestList"
+            >
+            <ul id="playerSuggestList" class="autocomplete__dropdown" role="listbox" hidden></ul>
+          </div>
+          <button type="button" id="clearPlayerBtn" class="btn btn--ghost btn--sm" hidden>전체 보기</button>
+        </div>
+        <div class="form-row form-row--dates">
+          <div class="date-picker">
+            <span class="date-picker__label">시작일</span>
+            <label class="date-picker__trigger" for="dateFrom">
+              <span id="dateFromText" class="date-picker__display date-picker__display--empty">날짜 선택</span>
+              <span class="date-picker__icon" aria-hidden="true">📅</span>
+              <input type="date" id="dateFrom" class="date-picker__input" title="시작일 선택">
+            </label>
+          </div>
+          <div class="date-picker">
+            <span class="date-picker__label">종료일</span>
+            <label class="date-picker__trigger" for="dateTo">
+              <span id="dateToText" class="date-picker__display date-picker__display--empty">날짜 선택</span>
+              <span class="date-picker__icon" aria-hidden="true">📅</span>
+              <input type="date" id="dateTo" class="date-picker__input" title="종료일 선택">
+            </label>
+          </div>
+          <button type="button" id="clearDateBtn" class="btn btn--ghost btn--sm">기간 초기화</button>
+        </div>
+        <div id="personalStats" class="history-stats" hidden>
+          <div class="history-stats__item history-stats__item--win">
+            <span class="history-stats__value" id="statsWins">0</span>
+            <span class="history-stats__label">승</span>
+          </div>
+          <div class="history-stats__item history-stats__item--lose">
+            <span class="history-stats__value" id="statsLosses">0</span>
+            <span class="history-stats__label">패</span>
+          </div>
+          <div class="history-stats__item history-stats__item--rate">
+            <span class="history-stats__value" id="statsWinRate">—</span>
+            <span class="history-stats__label">승률</span>
+          </div>
+          <div class="history-stats__item history-stats__item--total">
+            <span class="history-stats__value" id="statsTotal">0</span>
+            <span class="history-stats__label">경기</span>
+          </div>
+        </div>
+        <p id="dateFilterHint" class="hint hint--inline" hidden></p>
+      </section>
+
+      <section class="card card--wide">
+        <div class="card__header-row">
+          <h2 id="historyTitle">경기 목록</h2>
+        </div>
+        <div id="matchList" class="match-list">
+          <p class="empty">기록된 경기가 없습니다.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>파티에서 승리팀을 기록하면 Firebase에 저장됩니다.</p>
+    </footer>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/firebase-init.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/match-history.js"></script>
+  <script src="js/player-ui.js"></script>
+  <script src="js/history-app.js"></script>
+</body>
+</html>

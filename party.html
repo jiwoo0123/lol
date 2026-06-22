@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>파티 · LoL 내전 관리</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header__brand">
+        <span class="header__logo">⚔</span>
+        <div>
+          <h1>내전</h1>
+          <p class="header__sub">참가자 모집 · 파티 구성</p>
+        </div>
+      </div>
+      <div class="header__stats">
+        <span class="header__region">KR</span>
+        <span id="participantCount">0명</span>
+      </div>
+    </header>
+
+    <nav id="site-nav" data-page="party"></nav>
+    <script src="js/nav.js"></script>
+
+    <main class="main">
+      <section class="card card--wide party-section">
+        <div class="card__header-row">
+          <h2>참가자 목록</h2>
+          <span id="participantSectionCount" class="party-section-count">0명 참가</span>
+        </div>
+        <p class="hint">등록된 플레이어 중 내전에 참가할 사람을 추가하세요. 이름을 클릭하면 개인 전적을 볼 수 있습니다.</p>
+        <div id="participantList" class="participant-list">
+          <p class="empty empty--compact">아래 등록 플레이어에서 <strong>+ 참가</strong>를 눌러 참가자를 추가하세요.</p>
+        </div>
+        <div class="btn-group">
+          <button type="button" id="clearParticipantsBtn" class="btn btn--ghost" disabled>참가자 전체 비우기</button>
+        </div>
+      </section>
+
+      <section id="teamSection" class="card card--wide team-section" hidden>
+        <div class="card__header-row">
+          <h2>팀 나누기</h2>
+          <button type="button" id="clearTeamsBtn" class="btn btn--ghost btn--sm">팀 구성 초기화</button>
+        </div>
+        <p class="hint">참가자 카드에서 <strong>팀장</strong>을 지정한 뒤, 미배정 참가자를 각 팀에 넣으세요. 팀 패널의 <strong>블루팀/레드팀</strong> 버튼으로 진영을 바꿀 수 있습니다.</p>
+        <div id="teamBoard" class="team-board"></div>
+        <div id="unassignedSection" class="team-unassigned" hidden>
+          <h3 class="team-unassigned__title">미배정 <span id="unassignedCount">0명</span></h3>
+          <div id="unassignedList" class="team-unassigned__list"></div>
+        </div>
+        <div id="recordSection" class="match-record" hidden>
+          <h3 class="match-record__title">경기 기록</h3>
+          <p id="recordHint" class="hint hint--inline"></p>
+          <div class="match-record__actions">
+            <button type="button" id="recordBlueWin" class="btn team-record-btn team-record-btn--blue">블루팀 승리</button>
+            <button type="button" id="recordRedWin" class="btn team-record-btn team-record-btn--red">레드팀 승리</button>
+          </div>
+          <div id="recordStatus" class="status" hidden></div>
+        </div>
+      </section>
+
+      <section class="card card--wide">
+        <div class="card__header-row">
+          <h2>등록된 플레이어</h2>
+          <span id="poolCount" class="party-pool-count">등록 0명</span>
+        </div>
+        <p id="fileSyncStatus" class="file-sync-status">저장소: 불러오는 중...</p>
+        <div class="btn-group btn-group--compact">
+          <a href="users.html" class="btn btn--secondary">유저 등록으로</a>
+        </div>
+        <div class="form-row form-row--search">
+          <input type="search" id="searchInput" placeholder="닉네임 검색..." class="search-input" autocomplete="off">
+        </div>
+        <div id="playerPool" class="player-pool">
+          <p class="empty empty--compact">등록된 플레이어가 없습니다.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>팀 구성 후 승리팀을 기록하면 Firebase에 저장됩니다.</p>
+    </footer>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/firebase-init.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/match-history.js"></script>
+  <script src="js/session.js"></script>
+  <script src="js/player-ui.js"></script>
+  <script src="js/party-app.js"></script>
+</body>
+</html>

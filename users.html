@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>유저 등록 · LoL 내전 관리</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header__brand">
+        <span class="header__logo">⚔</span>
+        <div>
+          <h1>LoL 내전 관리</h1>
+          <p class="header__sub">유저 등록 · Firebase</p>
+        </div>
+      </div>
+      <div class="header__stats">
+        <span class="header__region">KR</span>
+        <span id="playerCount">등록 0명</span>
+      </div>
+    </header>
+
+    <nav id="site-nav" data-page="users"></nav>
+    <script src="js/nav.js"></script>
+
+    <main class="main">
+      <section class="card">
+        <h2>플레이어 등록</h2>
+        <p class="hint">닉네임만 입력해 등록하세요. Firebase에 실시간 저장됩니다.</p>
+        <div class="form-row">
+          <label for="nickname">닉네임</label>
+          <input type="text" id="nickname" placeholder="닉네임" autocomplete="off">
+          <button type="button" id="registerBtn" class="btn btn--primary">등록</button>
+        </div>
+        <div id="registerStatus" class="status" hidden></div>
+      </section>
+
+      <section class="card card--compact">
+        <h2>데이터 관리</h2>
+        <p class="hint">플레이어 데이터는 <strong>Firebase Firestore</strong>에 저장되며, 접속 중인 모든 기기에 실시간 반영됩니다.</p>
+        <p id="fileSyncStatus" class="file-sync-status">저장소: 불러오는 중...</p>
+        <div class="btn-group">
+          <button type="button" id="reloadBtn" class="btn btn--secondary">새로고침</button>
+          <button type="button" id="clearBtn" class="btn btn--danger">전체 삭제</button>
+        </div>
+      </section>
+
+      <section class="card card--wide">
+        <div class="card__header-row">
+          <h2>등록된 플레이어</h2>
+          <input type="search" id="searchInput" placeholder="닉네임 검색..." class="search-input" autocomplete="off">
+        </div>
+        <p class="hint hint--inline">왼쪽 ⋮⋮ 핸들을 드래그해 순서를 바꿀 수 있습니다. 이 순서가 파티 목록에도 적용되며, 새로 등록하면 맨 아래에 추가됩니다.</p>
+        <div id="playerList" class="player-list">
+          <p class="empty">등록된 플레이어가 없습니다.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>등록된 플레이어는 파티 · 전적 기록에 사용됩니다.</p>
+    </footer>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/firebase-init.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/player-ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
