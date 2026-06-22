@@ -92,24 +92,6 @@
 
 
 
-  function formatDate(iso) {
-
-    if (!iso) return '-';
-
-    try {
-
-      return new Date(iso).toLocaleString('ko-KR');
-
-    } catch (e) {
-
-      return iso;
-
-    }
-
-  }
-
-
-
   function getUserById(id) {
 
     var users = UserStorage.getAll();
@@ -535,8 +517,6 @@
             '<input type="text" class="player-card__nickname-input" data-id="' + u.id + '" placeholder="별명" maxlength="32" autocomplete="off">' +
 
             renderAccountsEditor(u) +
-
-            '<div class="player-card__meta">등록 ' + formatDate(u.registeredAt) + '</div>' +
 
           '</div>' +
 
