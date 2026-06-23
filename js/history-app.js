@@ -540,10 +540,10 @@
         var mySide = MatchHistory.userSideInMatch(match, filterUserId);
         var iWon = mySide === match.winnerSide;
         resultText = iWon ? '승리' : '패배';
-        resultClass = iWon ? 'match-card--win' : 'match-card--lose';
+        resultClass = iWon ? 'record-card--win' : 'record-card--lose';
       } else {
         resultText = winnerLabel + ' 승';
-        resultClass = match.winnerSide === 'blue' ? 'match-card--win' : 'match-card--lose';
+        resultClass = match.winnerSide === 'blue' ? 'record-card--win' : 'record-card--lose';
       }
 
       html +=

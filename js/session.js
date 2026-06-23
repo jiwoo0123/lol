@@ -4,29 +4,6 @@
 var SessionStorage = (function () {
   var KEY = 'lol_inhouse_session';
 
-  function pad(n) {
-    return n < 10 ? '0' + n : String(n);
-  }
-
-  function todayDate() {
-    var d = new Date();
-    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
-  }
-
-  function formatTodayLabel() {
-    var d = new Date();
-    try {
-      return d.toLocaleDateString('ko-KR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        weekday: 'short'
-      });
-    } catch (e) {
-      return todayDate();
-    }
-  }
-
   function emptySession() {
     return {
       participantIds: [],
@@ -116,8 +93,6 @@ var SessionStorage = (function () {
   }
 
   return {
-    getTodayDate: todayDate,
-    getTodayLabel: formatTodayLabel,
 
     getParticipantIds: function () {
       return loadRaw().participantIds.slice();

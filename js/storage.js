@@ -5,7 +5,6 @@ var UserStorage = (function () {
   var COLLECTION = 'users';
   var usersCache = [];
   var unsubscribe = null;
-  var loadSource = '';
   var lastError = '';
 
   function setLastError(err) {
@@ -71,22 +70,6 @@ var UserStorage = (function () {
     return 'u_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
   }
 
-  function normalizeSortOrders() {
-    var users = UserStorage.getAll();
-    if (users.length === 0) return Promise.resolve(false);
-
-    var batch = FirebaseApp.getDb().batch();
-    var changed = false;
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].sortOrder !== i) {
-        changed = true;
-        batch.update(usersRef().doc(users[i].id), { sortOrder: i });
-      }
-    }
-    if (!changed) return Promise.resolve(false);
-    return batch.commit().then(function () { return true; });
-  }
-
   return {
     init: function () {
       return FirebaseApp.init().then(function () {
@@ -98,14 +81,12 @@ var UserStorage = (function () {
             function (snapshot) {
               setLastError(null);
               applySnapshot(snapshot);
-              loadSource = 'firebase';
               if (!settled) {
                 settled = true;
-                resolve({ source: 'firebase', name: 'Firebase' });
+                resolve();
               }
             },
             function (err) {
-              loadSource = 'error';
               setLastError(err);
               if (!settled) {
                 settled = true;
@@ -120,8 +101,6 @@ var UserStorage = (function () {
     getAll: function () {
       return usersCache.slice().sort(compareBySortOrder);
     },
-
-    normalizeSortOrders: normalizeSortOrders,
 
     findByNickname: function (nickname) {
       var lower = nickname.toLowerCase();
@@ -175,28 +154,6 @@ var UserStorage = (function () {
         setLastError(err);
         return Promise.reject(new Error(FirebaseApp.formatError(err)));
       });
-    },
-
-    moveUser: function (id, delta) {
-      var users = this.getAll();
-      var idx = -1;
-      for (var i = 0; i < users.length; i++) {
-        if (users[i].id === id) {
-          idx = i;
-          break;
-        }
-      }
-      if (idx < 0) return Promise.resolve(false);
-
-      var newIdx = idx + delta;
-      if (newIdx < 0 || newIdx >= users.length) return Promise.resolve(false);
-
-      var ordered = users.map(function (u) { return u.id; });
-      var temp = ordered[idx];
-      ordered[idx] = ordered[newIdx];
-      ordered[newIdx] = temp;
-
-      return this.reorder(ordered).then(function () { return true; });
     },
 
     reorder: function (orderedIds) {

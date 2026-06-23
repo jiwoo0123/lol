@@ -5,7 +5,6 @@ var MatchHistory = (function () {
   var COLLECTION = 'matches';
   var matchesCache = [];
   var unsubscribe = null;
-  var loadSource = '';
   var lastError = '';
 
   function setLastError(err) {
@@ -94,14 +93,12 @@ var MatchHistory = (function () {
             function (snapshot) {
               setLastError(null);
               applySnapshot(snapshot);
-              loadSource = 'firebase';
               if (!settled) {
                 settled = true;
-                resolve({ source: 'firebase', name: 'Firebase' });
+                resolve();
               }
             },
             function (err) {
-              loadSource = 'error';
               setLastError(err);
               if (!settled) {
                 settled = true;
@@ -166,31 +163,6 @@ var MatchHistory = (function () {
         else losses++;
       }
       return { wins: wins, losses: losses, total: wins + losses };
-    },
-
-    getOpponentStats: function (userId) {
-      var matches = this.getByUserId(userId);
-      var stats = {};
-
-      for (var i = 0; i < matches.length; i++) {
-        var match = matches[i];
-        var mySide = userSideInMatch(match, userId);
-        if (!mySide) continue;
-
-        var oppSide = mySide === 'blue' ? 'red' : 'blue';
-        var oppIds = getTeamPlayerIds(match.teams[oppSide]);
-        var iWon = match.winnerSide === mySide;
-
-        for (var j = 0; j < oppIds.length; j++) {
-          var oppId = oppIds[j];
-          if (oppId === userId) continue;
-          if (!stats[oppId]) stats[oppId] = { wins: 0, losses: 0 };
-          if (iWon) stats[oppId].wins++;
-          else stats[oppId].losses++;
-        }
-      }
-
-      return stats;
     },
 
     reload: function () {

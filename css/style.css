@@ -101,20 +101,9 @@ body {
   border-radius: 6px;
 }
 
-.file-sync-status--connected {
-  color: var(--success);
-  border-color: rgba(34, 197, 94, 0.3);
-}
-
 .file-sync-status--warn {
   color: var(--gold);
   border-color: rgba(200, 155, 60, 0.35);
-}
-
-.file-sync-status--compact {
-  margin-bottom: 8px;
-  padding: 6px 10px;
-  font-size: 0.8rem;
 }
 
 /* Layout */
@@ -189,15 +178,6 @@ body {
   min-width: 70px;
   font-size: 0.9rem;
   color: var(--text-muted);
-}
-
-.form-row--checkbox label {
-  min-width: unset;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font-size: 0.85rem;
 }
 
 input[type="text"],
@@ -298,11 +278,6 @@ select:focus {
   object-fit: cover;
 }
 
-.autocomplete__icon--empty {
-  display: inline-block;
-  background: var(--bg-hover);
-}
-
 .autocomplete__text {
   min-width: 0;
 }
@@ -318,22 +293,6 @@ select:focus {
   font-weight: 400;
 }
 
-.autocomplete__meta {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: 1px;
-}
-
-.autocomplete__item--registered {
-  border-left: 2px solid var(--success);
-}
-
-.hint--sub {
-  margin-top: -8px;
-  font-size: 0.8rem;
-}
-
-.autocomplete__loading,
 .autocomplete__empty {
   padding: 12px;
   text-align: center;
@@ -402,24 +361,12 @@ select:focus {
   flex-wrap: wrap;
 }
 
-.btn--file {
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-}
-
 /* Status */
 .status {
   margin-top: 12px;
   padding: 10px 14px;
   border-radius: 6px;
   font-size: 0.9rem;
-}
-
-.status--loading {
-  background: rgba(3, 151, 171, 0.15);
-  color: var(--blue);
-  border: 1px solid rgba(3, 151, 171, 0.3);
 }
 
 .status--success {
@@ -463,30 +410,13 @@ select:focus {
   border-color: rgba(200, 155, 60, 0.4);
 }
 
-.player-card--clickable {
-  cursor: pointer;
-}
-
-.player-card--clickable:hover {
-  background: var(--bg-hover);
-}
-
 .player-card__main {
   display: flex;
   align-items: center;
   gap: 14px;
   flex: 1;
   min-width: 0;
-  cursor: pointer;
   border-radius: 6px;
-}
-
-.player-card__main:hover {
-  background: var(--bg-hover);
-}
-
-.player-card__link-hint {
-  color: var(--blue);
 }
 
 .player-card__icon,
@@ -668,21 +598,6 @@ select:focus {
   flex-shrink: 0;
   display: flex;
   gap: 6px;
-}
-
-.player-card__lolps {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--blue);
-  cursor: pointer;
-  padding: 6px 10px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  transition: background 0.2s;
-}
-
-.player-card__lolps:hover {
-  background: rgba(3, 151, 171, 0.12);
 }
 
 .player-card__drag-handle {
@@ -1176,42 +1091,6 @@ select:focus {
 }
 
 /* Form extras */
-.form-row--stack {
-  flex-direction: column;
-  align-items: stretch;
-}
-
-.input-textarea,
-.input-select {
-  width: 100%;
-  padding: 10px 12px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
-  font-size: 0.95rem;
-  font-family: inherit;
-}
-
-.input-textarea {
-  resize: vertical;
-  min-height: 60px;
-}
-
-.input-select {
-  cursor: pointer;
-}
-
-.input-date {
-  padding: 8px 10px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
-  font-size: 0.9rem;
-  font-family: inherit;
-}
-
 .form-row--dates {
   align-items: flex-end;
   gap: 12px;
@@ -1349,66 +1228,7 @@ select:focus {
   gap: 8px;
 }
 
-.match-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  width: 100%;
-  text-align: left;
-  padding: 12px 14px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  cursor: pointer;
-  color: inherit;
-  font-family: inherit;
-  transition: background 0.2s, border-color 0.2s;
-}
-
-.match-card:hover {
-  background: var(--bg-hover);
-  border-color: var(--gold);
-}
-
-.match-card--win {
-  border-left: 3px solid var(--success);
-}
-
-.match-card--lose {
-  border-left: 3px solid var(--danger);
-}
-
-.match-card__result {
-  font-size: 0.8rem;
-  font-weight: 700;
-  min-width: 36px;
-}
-
-.match-card--win .match-card__result {
-  color: var(--success);
-}
-
-.match-card--lose .match-card__result {
-  color: var(--danger);
-}
-
-.match-card__champ {
-  font-weight: 600;
-  color: var(--gold-light);
-}
-
-.match-card__kda {
-  font-size: 0.9rem;
-  margin-top: 2px;
-}
-
-.match-card__meta {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
-/* Inhouse match records (history + party) */
+/* Inhouse match records */
 .record-card {
   padding: 12px 14px;
   background: var(--bg);
